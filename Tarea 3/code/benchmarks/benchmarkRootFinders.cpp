@@ -289,7 +289,7 @@ BOOST_AUTO_TEST_CASE( TestRootFinders ) {
 	std::cout << "<testSolver>" << std::endl;
 	anpi::bm::testSolver<double>(0.1f, 1.e-15f, 0.125f, doubleData);
 	
-
+	/*
 	std::cout << "------------------------------------------" << std::endl;
 
 	for(int i=0; i<2; ++i){
@@ -304,10 +304,13 @@ BOOST_AUTO_TEST_CASE( TestRootFinders ) {
 				std::cout << "eps: " << tempMeasures.eps[n] << " call: " << tempMeasures.calls[n] << std::endl;
 			}	
 		}
-	}
+	}*/
 	
 
-	//::anpi::benchmarkPlot::write("Root_Finders.txt", doubleData);
+	::anpi::benchmarkPlot::write("Root_Finders.txt", doubleData);
+	::anpi::benchmarkPlot::plot(doubleData[0].measures[0], "Method: Secant Function: t1", "r");
+	::anpi::benchmarkPlot::plot(doubleData[1].measures[0], "Method: Newton-Raphson Function: t1", "b");
+	::anpi::benchmarkPlot::show();
 
 	}
 

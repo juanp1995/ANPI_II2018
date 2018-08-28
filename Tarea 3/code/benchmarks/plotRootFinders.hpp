@@ -36,20 +36,20 @@ namespace anpi {
 			std::vector<std::string> functions = {"t1", "t2", "t3", "t4"};
   		std::vector<measurements<T>> measures;
 		};
-  }
+  } // namespace plot
 
   namespace benchmarkPlot {
 
 
     /**
-     * Save a file with each measurement in a row.
+     * Save a file with the benchmark data of the root finders
      *
-     * The meaning of the columns is as follows:
-     * # Size
-     * # Average
-     * # Standard deviation
-     * # Minimum
-     * # Maximum  
+     * 
+     * File structure:
+     * -> Method name
+     *	  ->Function 
+     *			->- eps
+     *  		-> number of call to operator()
      */
 		template<typename T>
     void write(std::ostream& stream,
@@ -82,16 +82,28 @@ namespace anpi {
       os.close();
     }
 
-		/*
+		
 		template<typename T>
-		void plot(const anpi::plot::benchmarkData<T>& benchData,
+		void plot(const anpi::plot::measurements<T>& measures,
 							const std::string& legend,
 							const std::string& color) {
+
+			std::vector<double> eps(measures.eps.size()), calls(measures.calls.size());
+
+			for (size_t i=0; i<measures.eps.size(); ++i){
+				eps[i] = measures.eps[i];
+				calls[i] = measures.calls[i];
+			}
 			
 			static anpi::Plot2d<double> plotter;
 			plotter.initialize(1);
-			plotter.plot(benchData.measures, y, legend, color)
-		}*/
+			plotter.plot(eps, calls, legend, color);
+		}
+
+		void show() {
+			static anpi::Plot2d<double> plotter;
+			plotter.show();
+		}
 
     
 
