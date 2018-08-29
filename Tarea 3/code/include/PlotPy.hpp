@@ -75,6 +75,12 @@ namespace anpi {
     /// Set initial and final limits of the Y axis
     void setYRange(const T yi,const T ys);
 
+		void subPlot(const int sub);
+
+		void supTitle(const std::string& mainTitle);
+
+		void subPlotHeight(const float space);
+
     /**
      * Plot a curve by drawing line segments from
      * the sequence of points (datax[i],datay[i]).  The

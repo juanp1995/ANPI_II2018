@@ -56,6 +56,11 @@ namespace anpi {
       x0 = xNext;
     }
 
+		// Comprueba si el método convergió a una raíz
+		if (std::abs(funct(xNext)) < eps) {
+		  return xNext;
+		}
+
     // Return NaN if no root was found
     return std::numeric_limits<T>::quiet_NaN();
   }

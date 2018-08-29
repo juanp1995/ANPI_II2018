@@ -71,6 +71,27 @@ namespace anpi {
       std::to_string(yi) + "," + std::to_string(ys) + ")";
     PyRun_SimpleString(strylim.c_str());
   }
+
+	template <typename T>
+	void Plot2d<T>::subPlot(const int sub){
+		std::string strylim = "plt.subplot("+
+			std::to_string(sub) + ")";
+		PyRun_SimpleString(strylim.c_str());
+	}
+
+	template <typename T>
+	void Plot2d<T>::supTitle(const std::string& mainTitle){
+		std::string strylim = "plt.suptitle('"+ mainTitle + "')";
+		PyRun_SimpleString(strylim.c_str());
+	}
+
+	template <typename T>
+	void Plot2d<T>::subPlotHeight(const float space){
+		std::string strylim = "plt.subplots_adjust(hspace="+ std::to_string(space)+ ")";
+		PyRun_SimpleString(strylim.c_str());
+	}
+
+	
   
 
   template <typename T>

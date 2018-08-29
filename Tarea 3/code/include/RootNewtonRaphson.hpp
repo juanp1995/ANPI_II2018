@@ -58,7 +58,7 @@ namespace anpi {
 
     // Check if the method converged to a root, according to the
     // tolerance specified
-    if (std::abs(funct(xNext)) < eps - std::numeric_limits<T>::epsilon()) {
+    if (std::abs(funct(xNext)) < eps) {
       return xNext;
     }
 

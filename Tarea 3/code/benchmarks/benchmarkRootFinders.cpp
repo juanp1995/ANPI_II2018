@@ -221,25 +221,31 @@ namespace anpi {
      * multiplying from the start point until the end with the given factor
      */
     template<typename T>
-    void allSolvers(const T start,const T end,const T factor) {
+    void allSolvers(const T start,const T end,const T factor, std::vector<anpi::plot::benchmarkData<T>>& data) {
 
+			data[0].method = "Bisection";
       std::cout << "Bisection" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootBisection<T>,start,end,factor);
+      anpi::bm::rootBench<T>(anpi::rootBisection<T>,start,end,factor, data[0]);
 
+			data[1].method = "Interpolation";
       std::cout << "Interpolation" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootInterpolation<T>,start,end,factor);
+      anpi::bm::rootBench<T>(anpi::rootInterpolation<T>,start,end,factor, data[1]);
 
+			data[2].method = "Secant";
       std::cout << "Secant" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootSecant<T>,start,end,factor);
+      anpi::bm::rootBench<T>(anpi::rootSecant<T>,start,end,factor, data[2]);
 
+			data[3].method = "Newton-Raphson";
       std::cout << "NewtonRaphson" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootNewtonRaphson<T>,start,end,factor);
+      anpi::bm::rootBench<T>(anpi::rootNewtonRaphson<T>,start,end,factor, data[3]);
 
+			data[4].method = "Brent";
       std::cout << "Brent" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootBrent<T>,start,end,factor);
+      anpi::bm::rootBench<T>(anpi::rootBrent<T>,start,end,factor, data[4]);
 
+			data[5].method = "Ridder";
       std::cout << "Ridder" << std::endl;
-      anpi::bm::rootBench<T>(anpi::rootRidder<T>,start,end,factor);
+      anpi::bm::rootBench<T>(anpi::rootRidder<T>,start,end,factor, data[5]);
     }
 
 	// ----------------------------------------------------------------
@@ -269,27 +275,68 @@ BOOST_AUTO_TEST_SUITE( RootFinders )
 /**
  * Instantiate and test the methods of the Matrix class
  */
-/*
-BOOST_AUTO_TEST_CASE( RootFinders ) {
 
+BOOST_AUTO_TEST_CASE( RootFinders ) {
+/*
   // Benchmark the solvers using float
   std::cout << "<float>" << std::endl;
   anpi::bm::allSolvers<float>(0.1f,1.e-7f,0.125f);
-  
+*/  
+
+	std::vector<::anpi::plot::benchmarkData<double>> benchDataDouble(6);
+	std::vector<::anpi::plot::benchmarkData<float>> benchDataFloat(6);
+
   // Benchmark the solvers using double
   std::cout << "<double>" << std::endl;
-  anpi::bm::allSolvers<double>(0.1f,1.e-15f,0.125f);
-}*/
+  anpi::bm::allSolvers<double>(0.1f,1.e-15f,0.125f, benchDataDouble);
 
-BOOST_AUTO_TEST_CASE( TestRootFinders ) {
-	
-	std::vector<::anpi::plot::benchmarkData<double>> doubleData(2);
+	std::cout << "<float>" << std::endl;
+  anpi::bm::allSolvers<float>(0.1f,1.e-15f,0.125f, benchDataFloat);
+
+	//::anpi::benchmarkPlot::write("Root_Finders.txt", benchDataDouble);
+
 
 	{
-	std::cout << "<testSolver>" << std::endl;
-	anpi::bm::testSolver<double>(0.1f, 1.e-15f, 0.125f, doubleData);
+	::anpi::benchmarkPlot::plot(benchDataDouble[0], "Double", {double(1.e-15), double(0.1)}, {0, 22}, 1, 211);
+	::anpi::benchmarkPlot::plot(benchDataFloat[0], "Float", {double(1.e-15), double(0.1)}, {0, 22}, 1, 212);
+	}
+
+	{
+	::anpi::benchmarkPlot::plot(benchDataDouble[1], "Double", {double(1.e-15), double(0.1)}, {0, 22}, 2, 211);
+	::anpi::benchmarkPlot::plot(benchDataFloat[1], "Float", {double(1.e-15), double(0.1)}, {0, 22}, 2, 212);
+	}
+
+	{
+	::anpi::benchmarkPlot::plot(benchDataDouble[2], "Double", {double(1.e-15), double(0.1)}, {0, 22}, 3, 211);
+	::anpi::benchmarkPlot::plot(benchDataFloat[2], "Float", {double(1.e-15), double(0.1)}, {0, 22}, 3, 212);
+	}
+
+	{
+	::anpi::benchmarkPlot::plot(benchDataDouble[3], "Double", {double(1.e-15), double(0.1)}, {0, 22}, 4, 211);
+	::anpi::benchmarkPlot::plot(benchDataFloat[3], "Float", {double(1.e-15), double(0.1)}, {0, 22}, 4, 212);
+	}
+
+	{
+	::anpi::benchmarkPlot::plot(benchDataDouble[4], "Double", {double(1.e-15), double(0.1)}, {0, 22}, 5, 211);
+	::anpi::benchmarkPlot::plot(benchDataFloat[4], "Float", {double(1.e-15), double(0.1)}, {0, 22}, 5, 212);
+	}
+
+	{
+	::anpi::benchmarkPlot::plot(benchDataDouble[5], "Double", {double(1.e-15), double(0.1)}, {0, 22}, 6, 211);
+	::anpi::benchmarkPlot::plot(benchDataFloat[5], "Float", {double(1.e-15), double(0.1)}, {0, 22}, 6, 212);
+	}
 	
-	/*
+	::anpi::benchmarkPlot::show();
+}
+
+/*
+BOOST_AUTO_TEST_CASE( TestRootFinders ) {
+	
+	
+	//std::cout << "<testSolver>" << std::endl;
+	//anpi::bm::testSolver<double>(0.1f, 1.e-15f, 0.125f, doubleData);
+	
+
 	std::cout << "------------------------------------------" << std::endl;
 
 	for(int i=0; i<2; ++i){
@@ -304,16 +351,11 @@ BOOST_AUTO_TEST_CASE( TestRootFinders ) {
 				std::cout << "eps: " << tempMeasures.eps[n] << " call: " << tempMeasures.calls[n] << std::endl;
 			}	
 		}
-	}*/
+	}
 	
 
-	::anpi::benchmarkPlot::write("Root_Finders.txt", doubleData);
-	::anpi::benchmarkPlot::plot(doubleData[0].measures[0], "Method: Secant Function: t1", "r");
-	::anpi::benchmarkPlot::plot(doubleData[1].measures[0], "Method: Newton-Raphson Function: t1", "b");
-	::anpi::benchmarkPlot::show();
+	
 
-	}
-
-}
+	}*/
   
 BOOST_AUTO_TEST_SUITE_END()

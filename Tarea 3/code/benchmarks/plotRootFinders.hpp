@@ -40,6 +40,8 @@ namespace anpi {
 
   namespace benchmarkPlot {
 
+		const std::vector<std::string> colors = {"b", "g", "r", "c"};
+
 
     /**
      * Save a file with the benchmark data of the root finders
@@ -82,23 +84,53 @@ namespace anpi {
       os.close();
     }
 
+
+		template<typename T>
+		std::vector<std::vector<T>> extractData (const anpi::plot::measurements<T> dataStruct){
+			
+			std::vector<std::vector<T>> data(2);
+			std::vector<T> eps(dataStruct.eps.size()), calls(dataStruct.calls.size());
+	
+			for (size_t i=0; i<eps.size(); ++i){
+				eps[i] = dataStruct.eps[i];
+				calls[i] = dataStruct.calls[i];
+			}
+
+			data[0] = eps;
+			data[1] = calls;
+
+			return data; 
+		}
+
 		
 		template<typename T>
-		void plot(const anpi::plot::measurements<T>& measures,
-							const std::string& legend,
-							const std::string& color) {
+		void plot(const anpi::plot::benchmarkData<T>& data,
+							const std::string& subTitle,
+							const std::vector<T> xRange,
+							const std::vector<T> yRange,
+							int id,
+							const int subPlot) {
 
-			std::vector<double> eps(measures.eps.size()), calls(measures.calls.size());
-
-			for (size_t i=0; i<measures.eps.size(); ++i){
-				eps[i] = measures.eps[i];
-				calls[i] = measures.calls[i];
-			}
+			std::vector<std::string> functions = data.functions;
+			static anpi::Plot2d<T> plotter;
+			plotter.initialize(id);
+			plotter.supTitle(data.method);
+			plotter.subPlot(subPlot);
+			plotter.setTitle(subTitle);
+			plotter.setXLabel("eps");
+			plotter.setYLabel("calls");
+			plotter.subPlotHeight(0.7);
+			//plotter.setXRange(xRange[0], xRange[1]);
+			//plotter.setYRange(yRange[0], yRange[1]);
 			
-			static anpi::Plot2d<double> plotter;
-			plotter.initialize(1);
-			plotter.plot(eps, calls, legend, color);
+
+			for (size_t i=0; i<functions.size(); ++i){
+				std::vector<std::vector<T>> benchData = extractData(data.measures[i]);
+				plotter.plot(benchData[0], benchData[1], functions[i],  colors[i]);
+
+			}
 		}
+
 
 		void show() {
 			static anpi::Plot2d<double> plotter;
