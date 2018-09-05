@@ -1,0 +1,16 @@
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/CMakeFiles/rebuild_cache.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/CMakeFiles/test.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/CMakeFiles/edit_cache.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/src/CMakeFiles/edit_cache.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/src/CMakeFiles/test.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/src/CMakeFiles/anpi.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/src/CMakeFiles/rebuild_cache.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/src/CMakeFiles/proyecto1.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/test/CMakeFiles/rebuild_cache.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/test/CMakeFiles/edit_cache.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/test/CMakeFiles/proyecto1_tests.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/test/CMakeFiles/test.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/benchmarks/CMakeFiles/edit_cache.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/benchmarks/CMakeFiles/rebuild_cache.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/benchmarks/CMakeFiles/proyecto1_benchmarks.dir
+/home/juanp1995/ANPI_II2018/Proyecto 1/code/build/benchmarks/CMakeFiles/test.dir
