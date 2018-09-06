@@ -18,6 +18,7 @@
 #include <boost/math/tools/polynomial.hpp>
 
 #include <Deflation.hpp>
+#include <NewtonRaphson.hpp>
 
 
 
@@ -147,8 +148,7 @@ std::complex<T> calculateComplexRoot(
   std::complex<T> x_1 = static_cast<std::complex<T>>(x1);
   std::complex<T> x_2 = static_cast<std::complex<T>>(x2);
 
-  for (size_t i = 0; i < 50; ++i) {
-    std::cout << "iterations: " << i << std::endl;
+  for (size_t i = 0; i < 10000; ++i) {
     std::complex<T> h1 = x_1 - x_0;
     std::complex<T> h2 = x_2 - x_1;
 
@@ -230,7 +230,6 @@ void findAllReal(const bmt::polynomial<T>& poly, T& x0, T& x1, T& x2,
   std::vector<std::complex<T>> allRoots(poly.degree());
   bmt::polynomial<T> polyResiduo = poly;
   T residuo = 0;
-
   for (size_t i = 0; i < poly.degree(); ++i) {
     std::complex<T> root = calculateRealRoot(quotient, x0, x1, x2);
 
@@ -238,9 +237,14 @@ void findAllReal(const bmt::polynomial<T>& poly, T& x0, T& x1, T& x2,
       quotient = deflate2(quotient, root, polyResiduo);
     }
     else {
-      roots[i] = root.real();
+      T realRoot = root.real();
+      if (polish == PolishEnum::PolishRoots) {
+        realRoot = newtonRaphson(poly, realRoot);
+      }
+			roots.push_back(root.real());
       quotient = deflate(quotient, root.real(), residuo);
     }
+		if(quotient.degree()==0) return;
   }
 } // findAllReal
 
@@ -267,8 +271,8 @@ void findAllComplex(const bmt::polynomial<std::complex<T>>& poly,
 
   for (size_t i = 0; i < poly.degree(); ++i) {
     std::complex<T> root = calculateComplexRoot<T, U>(quotient, x0, x1, x2);
-    roots[i] = static_cast<std::complex<U>>(root);
-    quotient = deflate(poly, root, residuo);
+    roots.push_back(static_cast<std::complex<U>>(root));
+    quotient = deflate(quotient, root, residuo);
   }
 } //findAllComplex
 
@@ -301,6 +305,7 @@ typename std::enable_if<
   U x0 = start;
   U x1 = start - dx;
   U x2 = start - U(2) * dx;
+
 
   findAllReal<U>(poly, x0, x1, x2, roots, polish);
 }
@@ -383,7 +388,7 @@ typename std::enable_if<
     T root = calculateComplexRoot<TSub, U>(quotient, x0, x1, x2);
     //If imaginary part is negligible
     if (std::abs(root.imag()) < std::abs(std::numeric_limits<U>::epsilon() * root.real())) {
-      roots[i] = static_cast<U>(root.real());
+      roots.push_back(static_cast<U>(root.real()));
     }
     quotient = deflate(quotient, root, residuo);
   }
@@ -422,19 +427,29 @@ typename std::enable_if<(!boost::is_complex<T>::value && boost::is_complex<U>::v
   typedef typename extractType<U>::subType USub; //Inner type of U
 
   bmt::polynomial<T> quotient = poly;
-  bmt::polynomial<T> residuo;
+  bmt::polynomial<T> polyResiduo = poly;
+  T residuo = 0;
 
   T dx = T(1.0);
-  T x0 = static_cast<USub>(start.real());
+  T x0 = static_cast<T>(start.real());
   T x1 = x0 - dx;
   T x2 = x0 - T(2.0) * dx;
+  size_t degree = poly.degree();
 
-  for (size_t i = 0; i < poly.degree(); ++i) {
+  for (size_t i = 0; i < degree; ++i) {
     std::complex<T> root = calculateRealRoot(quotient, x0, x1, x2);
-    roots[i] = static_cast<U>(root);
-    quotient = deflate2(quotient, root, residuo);
+    if (root.imag() == 0) {
+      quotient = deflate(quotient, static_cast<T>(root.real()), residuo);
+      roots.push_back(std::complex<USub>(static_cast<USub>(root.real()), USub(0)));
+    }
+    else {
+      roots.push_back(static_cast<U>(root));
+      std::complex<USub> conjugate = static_cast<U>(std::conj(root));
+      roots.push_back(conjugate);
+      quotient = deflate2(quotient, root, polyResiduo);
+    }
+    if (quotient.degree() == 0) return;
   }
-
 }
  
 

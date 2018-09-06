@@ -5,6 +5,7 @@ src/CMakeFiles/proyecto1.dir/main.cpp.o: ../include/Deflation.hpp
 src/CMakeFiles/proyecto1.dir/main.cpp.o: ../include/Exception.hpp
 src/CMakeFiles/proyecto1.dir/main.cpp.o: ../include/JenkinsTraub.hpp
 src/CMakeFiles/proyecto1.dir/main.cpp.o: ../include/Muller.hpp
+src/CMakeFiles/proyecto1.dir/main.cpp.o: ../include/NewtonRaphson.hpp
 src/CMakeFiles/proyecto1.dir/main.cpp.o: ../include/PolynomialFormulaFormat.hpp
 src/CMakeFiles/proyecto1.dir/main.cpp.o: ../include/PolynomialParser.hpp
 src/CMakeFiles/proyecto1.dir/main.cpp.o: ../include/TypeName.hpp

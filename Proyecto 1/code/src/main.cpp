@@ -230,6 +230,7 @@ int main(int argc, char *argv[]) {
       ("jenkinstraub,j","use the Jenkins-Traub method to find the roots")
       ("polish,p","polish the roots")
       ("help,h", "produce help message")
+			("start,s", po::value<std::string>()->default_value("0"), "initial point for Muller")
       ;
 
     po::variables_map vm;
@@ -292,6 +293,12 @@ int main(int argc, char *argv[]) {
     if (vm.count("polish")) {
       config.polish = anpi::PolishRoots;
     }
+
+		if (vm.count("start")) {
+			std::string start = vm["start"].as<std::string>();
+			config.start = boost::lexical_cast<std::complex<double> >('('+start+')');
+			std::cout << "initial point: " << start << std::endl;			
+		}
     
     // Dispatch with the proper types to call the real workers
     dispatch(config,poly,coefType,rootType);

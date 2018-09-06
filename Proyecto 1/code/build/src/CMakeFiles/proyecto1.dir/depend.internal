@@ -6,6 +6,7 @@ src/CMakeFiles/proyecto1.dir/main.cpp.o
  ../include/Exception.hpp
  ../include/JenkinsTraub.hpp
  ../include/Muller.hpp
+ ../include/NewtonRaphson.hpp
  ../include/PolynomialFormulaFormat.hpp
  ../include/PolynomialParser.hpp
  ../include/TypeName.hpp

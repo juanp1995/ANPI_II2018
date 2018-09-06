@@ -41,6 +41,16 @@ boost/math/tools/polynomial.hpp
 -
 Deflation.hpp
 -
+NewtonRaphson.hpp
+-
+
+../include/NewtonRaphson.hpp
+limits
+-
+boost/type_traits/is_complex.hpp
+-
+boost/math/tools/polynomial.hpp
+-
 
 ../include/PolynomialFormulaFormat.hpp
 iostream
