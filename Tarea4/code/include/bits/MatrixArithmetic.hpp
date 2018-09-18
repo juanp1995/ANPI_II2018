@@ -11,7 +11,7 @@
 #ifndef ANPI_MATRIX_ARITHMETIC_HPP
 #define ANPI_MATRIX_ARITHMETIC_HPP
 
-#include "Intrinsics.hpp"
+#include "../Intrinsics.hpp"
 #include <type_traits>
 
 namespace anpi
@@ -111,6 +111,26 @@ namespace anpi
 
       for (;here!=end;) {
         *here++ -= *bptr++;
+      }
+    }
+
+    template<typename T, class Alloc>
+    inline void multiply(const Matrix<T, Alloc>& a, const Matrix<T, Alloc>& b,
+        Matrix<T, Alloc>& c) {
+
+      assert((a.cols() == b.rows()));
+
+      c.allocate(a.rows(), b.cols());
+      T value = T(0.0);
+
+      for (size_t j = 0; j < c.cols(); ++j) {
+        for (size_t i = 0; i < c.rows(); ++i) {
+          value = T(0.0);
+          for (size_t k = 0; k < a.cols(); ++k)
+            value += a[i][k] * b[k][j];
+
+          c[i][j] = value;
+        }
       }
     }
 
@@ -396,6 +416,13 @@ namespace anpi
                          const Matrix<T,Alloc>& b) {
 
       ::anpi::fallback::subtract(a,b);
+    }
+
+    template<typename T, class Alloc>
+    inline void multiply(const Matrix<T, Alloc>& a, const Matrix<T, Alloc>& b,
+        Matrix<T, Alloc>& c) {
+
+      ::anpi::fallback::multiply(a, b, c);
     }
   } // namespace simd
 

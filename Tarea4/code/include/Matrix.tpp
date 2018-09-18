@@ -424,9 +424,14 @@ namespace anpi
   template<typename T,class Alloc>
   Matrix<T,Alloc> operator*(const Matrix<T,Alloc>& a,
                             const Matrix<T,Alloc>& b) {
+                            
+    assert( (a.cols() == b.rows()) );
     
+    Matrix<T, Alloc> c(a.rows(), b.cols(), anpi::DoNotInitialize);
+    ::anpi::aimpl::multiply(a,b,c);
+    return c;
     
-    assert(false && "Not implemented yet");
+    //assert(false && "Not implemented yet");
   }
 
   // TODO: Solucionar en la Tarea 04 (Punto 1)

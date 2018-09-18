@@ -32,7 +32,24 @@ namespace anpi {
                    Matrix<T>& L,
                    Matrix<T>& U) {
 
-    throw anpi::Exception("To be implemented yet");
+    if (LU.rows() != LU.cols()) throw anpi::Exception("Matrix is not a LU decomposition");
+
+    for (size_t i = 0; i < LU.rows(); ++i) {
+      for (size_t j = 0; j < LU.cols(); ++j) {
+        if (i == j) {
+          L[i][j] = LU[i][j];
+          U[i][j] = T(1);
+        }
+        else if (j > i) {
+          L[i][j] = T(0);
+          U[i][j] = LU[i][j];
+        }
+        else {
+          L[i][j] = LU[i][j];
+          U[i][j] = T(0);
+        }
+      } // for j
+    } // for i
 
   }
   
@@ -60,8 +77,69 @@ namespace anpi {
                Matrix<T>& LU,
                std::vector<size_t>& permut) {
 
-    throw anpi::Exception("To be implemented yet");
-  }
+    if (A.rows() != A.cols()) throw anpi::Exception("Matrix has to be square");
+
+		size_t n = A.rows();
+		size_t i, j, k, imax = 0;
+		T pivot, temp, sum = T(0.0);
+		LU = A;
+
+		for (size_t m = 0; m < n; ++m) {
+		  permut[m] = m;
+		}
+
+		for (j = 0; j < n; ++j) {
+		  pivot = T(0.0);
+		  //Search for the pivot
+		  for (i = j; i < n; ++i) {
+		    if ((temp = std::fabs(LU[i][j])) >= pivot) {
+		      pivot = temp;
+		      imax = i;
+		    }
+		  }
+		  if (pivot == T(0.0)) throw anpi::Exception("Singular matrix");
+
+		  // Interchange rows
+		  if (j != imax) {
+		    for (k = 0; k < n; ++k) {
+		      temp = LU[imax][k];
+		      LU[imax][k] = LU[j][k];
+		      LU[j][k] = temp;
+		    }
+        pivot = temp;
+        imax = i;
+		  }
+
+		  if (j == 0) {
+		    for (k = j + 1; k < n; ++k)
+		      LU[j][k] = LU[j][k] / pivot;
+		  }
+
+		  else if (j > 0 && j < n - 1) {
+		    for (i = j; i < n; ++i) {
+		      sum = LU[i][j];
+		      for (k = 0; k < j; ++k)
+		        sum -= LU[i][k] * LU[k][j];
+		      LU[i][j] = sum;
+		    }
+
+		    for (k = j + 1; k < n; ++k) {
+		      sum = LU[j][k];
+		      for (i = 0; i < j; ++i)
+		        sum -= LU[j][i] * LU[i][k];
+		      LU[j][k] = sum / pivot;
+		    }
+		  }
+
+		  else {
+		    sum = LU[n - 1][n - 1];
+		    for (k = 0; k < n - 1; ++k)
+		      sum -= LU[n - 1][k] * LU[k][n - 1];
+		    LU[n - 1][n - 1] = sum;
+		  }
+
+		} // for j
+  } // luCrout
 
 }
   
