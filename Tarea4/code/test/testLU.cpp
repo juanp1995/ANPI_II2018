@@ -12,6 +12,7 @@
 
 #include "LUCrout.hpp"
 #include "LUDoolittle.hpp"
+#include "SolveLU.hpp"
 
 #include <iostream>
 #include <exception>
@@ -24,6 +25,11 @@
 
 namespace anpi {
   namespace test {
+  
+  	enum UnpackEnum {
+  		unpackCrout, 
+  		unpackDoolittle
+  		};
     
     /// Test the given closed root finder
     template<typename T>
@@ -82,7 +88,58 @@ namespace anpi {
           }
         }
       }
-    }
+    }//luTest
+    
+    
+    /*
+     * Test the given unpack method
+     */
+    template<typename T>
+    void unpackTest(const std::function<void(const Matrix<T>&,
+    																				Matrix<T>&,
+    																				Matrix<T>&)>& unpack,
+										const UnpackEnum method) {
+			
+			//Result							
+			anpi::Matrix<T> L, U;	
+			
+			//Test if a non-square matrix is successfully detected 
+			{
+				anpi::Matrix<T> LU = { {1,2,3,4}, {5,6,7,8} };
+				try{
+					unpack(LU, L, U);
+					BOOST_CHECK_MESSAGE(false, "Rectangular matrix not properly catched");
+				}
+				catch(anpi::Exception& exc){
+					BOOST_CHECK_MESSAGE(true, "Rectangular matrix properly detected");
+				}
+			}
+			
+			//Test lower and upper triangular matrix
+			{
+				anpi::Matrix<T> LU = { {1,2,3,4}, {5,6,7,8}, {9,10,11,12}, {13,14,15,16} };
+				unpack(LU,L,U);
+								
+				for(size_t i=0; i<LU.rows(); ++i){
+					for(size_t j=0; j<LU.cols(); ++j){
+						//Test unitary diagonal
+						if(i==j){
+							if(method == UnpackEnum::unpackCrout)
+								BOOST_CHECK(U[i][j] == T(1));
+							else
+								BOOST_CHECK(L[i][j] == T(1));
+						}
+						
+						else if(j>i)//Test lower triangular matrix
+							BOOST_CHECK( L[i][j] == T(0) );
+						
+						else //Test upper triangular matrix
+							BOOST_CHECK( U[i][j] == T(0) );
+					}//for j
+				}// for i
+			}
+										
+		}//unpackTest
 
   } // test
 }  // anpi
@@ -103,5 +160,21 @@ BOOST_AUTO_TEST_CASE(Crout)
   anpi::test::luTest<double>(anpi::luCrout<double>,anpi::unpackCrout<double>);
 }
 
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE( Unpack )
+
+BOOST_AUTO_TEST_CASE(UnpackCrout)
+{
+	anpi::test::unpackTest<float>(anpi::unpackCrout<float>, anpi::test::UnpackEnum::unpackCrout);
+	anpi::test::unpackTest<double>(anpi::unpackCrout<double>, anpi::test::UnpackEnum::unpackCrout);
+}
+
+BOOST_AUTO_TEST_CASE(UnpackDoolittle)
+{
+	anpi::test::unpackTest<float>(anpi::unpackDoolittle<float>, anpi::test::UnpackEnum::unpackDoolittle);
+	anpi::test::unpackTest<double>(anpi::unpackDoolittle<double>, anpi::test::UnpackEnum::unpackDoolittle);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
+

@@ -23,6 +23,8 @@
 #include "benchmarkFramework.hpp"
 #include "Matrix.hpp"
 #include "Allocator.hpp"
+#include "LUCrout.hpp"
+#include "LUDoolittle.hpp"
 
 BOOST_AUTO_TEST_SUITE( Matrix )
 
@@ -113,6 +115,71 @@ public:
   }
 };
 
+
+/// Benchmark for LU decomposition methods
+template<typename T>
+class benchLU {
+protected:
+  /// Maximum allowed size for the square matrices
+  const size_t _maxSize;
+
+  /// A large matrix holding 
+  anpi::Matrix<T> _data;
+
+  /// State of the benchmarked evaluation
+  anpi::Matrix<T> _a;
+  anpi::Matrix<T> _lu;
+  std::vector<size_t> _permut;
+public:
+  /// Construct
+  benchLU(const size_t maxSize)
+    : _maxSize(maxSize),_data(maxSize,maxSize,anpi::DoNotInitialize) {
+
+    size_t idx=2;
+    for (size_t r=0;r<_maxSize;++r) {
+      for (size_t c=0;c<_maxSize;++c) {
+        _data(r,c)=idx++;
+      }
+    }
+  }
+
+  /// Prepare the evaluation of given size
+  void prepare(const size_t size) {
+    assert (size<=this->_maxSize);
+    this->_a=std::move(anpi::Matrix<T>(size,size,_data.data()));
+    //this->_b=this->_a;
+  }
+};
+
+
+/// Evaluation method for the Crout algorithm 
+template<typename T>
+class benchLUCrout : public benchLU<T> {
+public:
+  /// Constructor
+  benchLUCrout(const size_t n) : benchLU<T>(n) { }
+  
+  // Evaluate add on-copy
+  inline void eval() {
+  	anpi::luCrout(this->_a, this->_lu, this->_permut);
+  }
+};
+
+
+/// Evaluation method for the Doolittle algorithm
+template<typename T>
+class benchLUDoolittle : public benchLU<T> {
+public:
+  /// Constructor
+  benchLUDoolittle(const size_t n) : benchLU<T>(n) { }
+  
+  // Evaluate add on-copy
+  inline void eval() {
+  	anpi::luDoolittle(this->_a, this->_lu, this->_permut);
+  }
+};
+
+
 /**
  * Instantiate and test the methods of the Matrix class
  */
@@ -192,5 +259,46 @@ BOOST_AUTO_TEST_CASE( Add ) {
   
   ::anpi::benchmark::show();
 }
+
+/*
+ * Instantiate the methods for the benchmark of LU decomposition
+ *
+ */
+BOOST_AUTO_TEST_CASE( Decomposition ) {
+
+  std::vector<size_t> sizes = {  24,  32,  48,  64,
+                                 96, 128, 192, 256,
+                                384, 512, 768,1024 };
+
+  const size_t n=sizes.back();
+  const size_t repetitions=10;
+  std::vector<anpi::benchmark::measurement> times;
+
+	//Benchmark LUCrout
+  { 
+    benchLUCrout<double>  blucrout(n);
+
+    // Measure on-copy add
+    ANPI_BENCHMARK(sizes,repetitions,times,blucrout);
+    
+    ::anpi::benchmark::write("LU_Crout_double.txt",times);
+    ::anpi::benchmark::plotRange(times,"Crout (double)","r");
+  }
+
+		//Benchmark LUDoolittle
+  {
+    benchLUDoolittle<double>  bldoo(n);
+
+    // Measure on-copy add
+    ANPI_BENCHMARK(sizes,repetitions,times,bldoo);
+    
+    ::anpi::benchmark::write("LU_Doolittle_double.txt",times);
+    ::anpi::benchmark::plotRange(times,"Doolittle (double)","g");
+  }
+  
+  ::anpi::benchmark::show();
+}
   
 BOOST_AUTO_TEST_SUITE_END()
+
+

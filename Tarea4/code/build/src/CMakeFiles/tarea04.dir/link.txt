@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -pedantic -O3   CMakeFiles/tarea04.dir/main.cpp.o  -o ../bin/tarea04 libanpi.a -lpython2.7 

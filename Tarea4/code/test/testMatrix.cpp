@@ -19,6 +19,7 @@
 
 #include "Matrix.hpp"
 #include "Allocator.hpp"
+#include "Exception.hpp"
 
 // Explicit instantiation of all methods of Matrix
 
@@ -270,7 +271,32 @@ void testArithmetic() {
     c=a-M{ {7,8,9},{10,11,12} };
     BOOST_CHECK( c==r );
   } 
-}
+
+	// Test overload of multiplication operator
+	// for Matrix * Matrix
+	{
+		M a = { {1,2,3},{4,5,6},{7,8,9} };
+		M b = { {1,2}, {3,4}, {5,6} };
+		M r = { {22,28}, {49,64}, {76, 100} };
+		
+		//Test compatible matrix sizes
+		{
+			try{
+				M c = b*a;
+				BOOST_CHECK_MESSAGE(false, "Incompatible matrix sizes not properly catched");
+			}			
+			catch(anpi::Exception& exc){
+				BOOST_CHECK_MESSAGE(true, "Incompatible matrix sizes properly catched");
+			}
+		}
+		
+		//Test multiplication result
+		{
+			M c = a*b;
+			BOOST_CHECK( c==r );
+		}
+	}
+} // testArithmetic
 
 BOOST_AUTO_TEST_CASE(Arithmetic) {
   dispatchTest(testArithmetic);  

@@ -12,6 +12,7 @@
 #define ANPI_MATRIX_ARITHMETIC_HPP
 
 #include "../Intrinsics.hpp"
+#include "../Exception.hpp"
 #include <type_traits>
 
 namespace anpi
@@ -118,7 +119,8 @@ namespace anpi
     inline void multiply(const Matrix<T, Alloc>& a, const Matrix<T, Alloc>& b,
         Matrix<T, Alloc>& c) {
 
-      assert((a.cols() == b.rows()));
+	    if( a.cols() != b.rows() )
+    		throw anpi::Exception("Incompatible matrix sizes");
 
       c.allocate(a.rows(), b.cols());
       T value = T(0.0);
@@ -134,6 +136,15 @@ namespace anpi
       }
     }
 
+	template<typename T, class Alloc>
+	    inline void multiply(const Matrix<T, Alloc>& a, const std::vector<T>& b, std::vector<T>& c){
+	    	for (size_t i=0;i<a.rows();++i){
+	    		c[i]=0;
+	    		for(size_t j=0;j<a.cols();++j){
+	    			c[i]+=a[i][j]*b[j];
+	    		}
+	    	}
+	    }
   } // namespace fallback
 
 
