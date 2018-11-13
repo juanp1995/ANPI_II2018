@@ -1,0 +1,2 @@
+/usr/bin/ar qc libanpi.a  CMakeFiles/anpi.dir/FileParser.cpp.o CMakeFiles/anpi.dir/Proyecto3.cpp.o
+/usr/bin/ranlib libanpi.a

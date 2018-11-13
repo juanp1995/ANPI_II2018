@@ -1,0 +1,9 @@
+/home/juanp1995/Proyecto_3/Proyecto3/build/CMakeFiles/rebuild_cache.dir
+/home/juanp1995/Proyecto_3/Proyecto3/build/CMakeFiles/edit_cache.dir
+/home/juanp1995/Proyecto_3/Proyecto3/build/CMakeFiles/doc.dir
+/home/juanp1995/Proyecto_3/Proyecto3/build/CMakeFiles/test.dir
+/home/juanp1995/Proyecto_3/Proyecto3/build/src/CMakeFiles/edit_cache.dir
+/home/juanp1995/Proyecto_3/Proyecto3/build/src/CMakeFiles/test.dir
+/home/juanp1995/Proyecto_3/Proyecto3/build/src/CMakeFiles/anpi.dir
+/home/juanp1995/Proyecto_3/Proyecto3/build/src/CMakeFiles/rebuild_cache.dir
+/home/juanp1995/Proyecto_3/Proyecto3/build/src/CMakeFiles/proyecto3.dir
